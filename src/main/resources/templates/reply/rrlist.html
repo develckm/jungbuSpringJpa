@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class="list-group ms-2">
+	<th:block th:each="reply:${rrList}">
+  	<div th:id="'replyLi'+${reply.replyNo}" class="list-group-item list-group-item-action py-3" aria-current="true">
+	    <div class="d-flex w-100 justify-content-between">
+	      <h5 class="mb-1" th:text="${reply.title}"></h5>
+	      <small th:text="${#dates.format(reply.postTime,'HH:mm:ss yyyy-MM-dd')}"></small>
+	    </div>
+	    <div class="mb-1 d-flex justify-content-between align-items-center">
+		    <div>
+			    <span class="me-2" th:text="${reply.userId}"></span>
+				<button class="rounded-pill btn btn-outline-danger btn-sm">
+					<i class="bi bi-hand-thumbs-up"></i>
+					<th:block th:text="${reply.likes}"></th:block>
+				</button>
+				<button class="rounded-pill btn btn-outline-primary btn-sm"> 
+					<i class="bi bi-hand-thumbs-down"></i>
+					<th:block th:text="${reply.bads}"></th:block>
+				</button>
+			</div>
+			<button th:onclick="readReplyUpdateForm([[${reply.replyNo}]])"
+				class="btn btn-outline-secondary btn-sm" type="button">
+				수정하기
+			</button>
+	    </div>
+	    <div class="mb-1 row" >
+	    	<img th:if="${reply.imgPath!=null}" class="col-2" alt=""
+	    	 th:src="@{/img/{file}(file=${reply.imgPath})}">
+	    	<span  class="col-10"  th:text="${reply.contents}"></span>
+	    </div>
+   		<th:block th:include="/reply/rrlist" 
+				th:with="rrList=${reply.replyList}"></th:block>
+	   		<div th:if="${session.loginUser!=null}" class="my-2">
+			<a class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" 
+				th:href="${'#collapse'+reply.replyNo}">
+			  	대 댓글 작성
+			</a>
+			<div class="collapse" th:id="${'collapse'+reply.replyNo}">
+			  <div class="card card-body">
+				<form name="replyInserForm" 
+				onsubmit="insertReply(event)"
+				class="bg-light px-3 py-2" action="/reply/insert.do" method="post" enctype="multipart/form-data">
+				<h3>댓글 작성 (<span th:text="${session.loginUser.userId}"></span>)</h3>
+					<input type="hidden" name="boardNo" th:value="${reply.boardNo}"> 
+					<input type="hidden" name="fkReplyNo" th:value="${reply.replyNo}"> 
+					<p class="input-group">
+						<label class="input-group-text" for="replyTitle">제목</label>
+						<input class="form-control" type="text" name="title" id="replyTitle" placeholder="길이가 255 이하로 작성">
+					</p>
+					<p class="input-group">
+						<label class="input-group-text" for="replyImg">이미지</label>
+						<input type="file" name="img" class="form-control" id="replyImg">
+					</p>
+					<p class="form-floating">
+						<textarea class="form-control" name="contents" id="replyContents" placeholder="내용"></textarea>
+						<label for="replyContents">내용</label>
+					</p>
+					<div class="input-group">
+						<button class="btn btn-outline-primary">등록</button>
+					</div>
+				</form>
+			  </div>
+			</div>
+		</div>		
+	    
+	    
+ 	</div>
+ 	
+	 </th:block>
+</div>
+</html>

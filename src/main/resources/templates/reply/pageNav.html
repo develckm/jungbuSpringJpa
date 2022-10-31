@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" th:classappend="${(replyList.isFirst)?'disabled':''}">
+      <a class="page-link" th:href="@{''(page=0,boardNo=${boardNo})}">First</a>
+    </li>
+    <li class="page-item" th:classappend="${(!replyList.hasPrevious)?'disabled':''}">
+      <a class="page-link" th:href="@{''(page=${replyList.number-1},boardNo=${boardNo})}">Prev</a>
+    </li>
+    <li class="page-item" th:each="page:${#numbers.sequence(0,replyList.totalPages-1)}">
+    	<a 	class="page-link"
+    		th:classappend="${(replyList.number==page)?'active':''}" 
+    		th:href="@{''(page=${page},boardNo=${boardNo})}" 
+    		th:text="${page+1}"></a>
+    </li>
+    <li class="page-item" th:classappend="${(!replyList.hasNext)?'disabled':''}">
+      <a class="page-link" th:href="@{''(page=${replyList.number+1},boardNo=${boardNo})}">Next</a>
+    </li>
+    <li class="page-item" th:classappend="${(replyList.isLast)?'disabled':''}">
+      <a class="page-link" th:href="@{''(page=${replyList.totalPages-1},boardNo=${boardNo})}">Last</a>
+    </li>
+    
+  </ul>
+</html>

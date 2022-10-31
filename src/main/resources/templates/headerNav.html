@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+	<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">(JPA)HOME</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+      <ul class="navbar-nav" th:with="uri=${#httpServletRequest.requestURI}">
+        <li class="nav-item">
+          <a th:classappend="${(#strings.equals(uri,'/user/list.do'))?'active':''}" class="nav-link" href="/user/list.do">유저리스트</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/board/list.do">게시글리스트</a>
+        </li>
+      </ul>      
+	  <ul class="navbar-nav" >
+	  	<th:block th:if="${session.loginUser==null}">
+		  	<li class="nav-item">
+		     	<a  class="nav-link" href="/user/login.do">로그인</a>
+		  	</li>
+	  	</th:block>
+	  	<th:block th:unless="${session.loginUser==null}">
+	  		<li class="nav-item">
+		     	<a  class="nav-link" th:href="@{/user/detail.do(userId=${session.loginUser.userId})}">
+		     		<th:block th:text="${session.loginUser.userId}"></th:block>
+		     		(<th:block th:text="${session.loginUser.name}"></th:block>)
+		     	</a>
+		  	</li>
+		  	<li class="nav-item">
+		  		<a href="/user/logout.do" class="nav-link">로그아웃</a>
+		  	</li>
+	  	</th:block>
+	  </ul>
+    </div>
+  </div>
+</nav>
+<th:block th:if="${session.msg!=null}">
+	<script th:inline="javascript">
+		let msg=/*[[${session.msg}]]*/+"";
+		alert(msg);
+		/*[[${#session.removeAttribute('msg')}]]*/
+	</script>
+</th:block>	
+	
+	
+	
+	
+</html>

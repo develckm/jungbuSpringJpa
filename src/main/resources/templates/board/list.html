@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<header th:include="/headerNav"></header>
+	<main class="container">
+		<h1 class="mt-5">Spring_board.board list</h1>
+		<p class="d-flex justify-content-end">
+			<a class="btn btn-outline-primary" href="/board/insert.do">
+				게시글 등록
+			</a>
+		</p>
+		<table class="table mt-3">
+			<thead>
+				<tr>
+					<th>no</th>
+					<th>제목</th>
+					<th>게시일</th>
+					<th>글쓴이</th>
+					<th>views</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="link-secondary"
+					th:each="board:${boardList}"
+					th:onclick="location.href='detail.do?boardNo=[[${board.boardNo}]]'">
+					<td th:text="${board.boardNo}"></td>
+					<td th:text="${board.title}"></td>
+					<td th:text="${#dates.format(board.postTime,'MM월dd일 HH시mm분')}"></td>
+					<td th:text="${board.user.userId}"></td>
+					<td th:text="${board.views}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<nav th:include="/board/pageNav"></nav>
+		
+		
+		
+	</main>		
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="/js/boardDetail.js" defer="defer"></script>
+</head>
+<body>
+	<header th:include="headerNav"></header>
+	<main class="container mt-5">
+		<h1 class="mt-3">Spring_board.board detail</h1>
+		<div>
+			<p>
+				<strong>no : </strong>
+				<span th:text="${board.boardNo}"></span>
+			</p>
+			<p>
+				<strong>글쓴이 : </strong>
+				<span th:text="${board.user.userId+' / '+board.user.name+' / '+board.user.email}"></span>
+			</p>
+			<p>
+				<strong>제목 : </strong>
+				<span th:text="${board.title}"></span>
+			</p>
+			<p>
+				<strong>게시일 : </strong>
+				<span th:text="${board.postTime}"></span>
+			</p>
+			<p>
+				<strong>조회수 : </strong>
+				<span th:text="${board.views}"></span>
+			</p>
+			<p>
+				<button class="rounded-pill btn btn-outline-danger">
+					<i class="bi bi-hand-thumbs-up"></i>
+					<th:block th:text="${board.likes}"></th:block>
+				</button>
+				
+				<button class="rounded-pill btn btn-outline-primary"> 
+					<i class="bi bi-hand-thumbs-down"></i>
+ 					<th:block th:text="${board.bads}"></th:block>
+ 				</button>
+				
+			</p>
+<!-- 			<div>
+				<img th:each="boardImg:${board.boardImgList}"
+				style="max-width: 100px" alt="" 
+				th:src="@{/img/{file}(file=${boardImg.imgPath})}">
+			</div>
+ -->			<p>
+				<strong>내용 : </strong>
+				<span th:text="${board.contents}"></span>
+			</p>
+			
+		</div>
+		<div class="d-flex justify-content-end">
+			<a class="btn btn-outline-primary" 
+				th:href="@{/board/update.do(boardNo=${board.boardNo})}">
+				수정 페이지
+			</a>
+		</div>
+		<h2 class="d-flex justify-content-between border-top mt-4 pt-3">
+			댓글 리스트
+			<a class="btn btn-outline-primary" data-bs-toggle="collapse" href="#replyList">
+			 	토글
+			</a>
+		</h2>
+		<form name="replyInserForm" 
+		th:if="${session.loginUser!=null}"
+		class="card" action="/reply/insert.do" method="post" enctype="multipart/form-data">
+			<div class="card-body">
+				<h4>댓글 작성 (<span th:text="${session.loginUser.userId}"></span>)</h4>
+				<input type="hidden" name="boardNo" th:value="${board.boardNo}"> 
+				<p class="input-group input-group-sm">
+					<label class="input-group-text" for="replyTitle">제목</label>
+					<input class="form-control" type="text" name="title" id="replyTitle" placeholder="길이가 255 이하로 작성">
+				</p>
+				<p class="input-group input-group-sm">
+					<label class="input-group-text" for="replyImg">이미지</label>
+					<input type="file" name="img" class="form-control" id="replyImg">
+				</p>
+				<div class="input-group input-group-sm">
+					<div class="form-floating">
+						<textarea class="form-control" name="contents" id="replyContents" placeholder="내용"></textarea>
+						<label for="replyContents">내용</label>
+					</div>
+					<button class="btn btn-outline-primary">등록</button>
+				</div>
+			</div>
+		</form>
+ 		<section id="replyList" class="mt-3 collapse show">
+			<th:block th:include="/reply/list" th:with="boardNo=${board.boardNo}">			
+		</section>
+	</main>
+</body>
+</html>

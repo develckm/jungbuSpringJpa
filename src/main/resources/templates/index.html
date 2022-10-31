@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<header th:include="/headerNav"></header>
+	<main  class="container">
+		<h1>Spring boot MVC+JPA</h1>
+		<h2>메이븐으로 의존성주입(DI)한 라이브러리</h2>
+		<ul>
+			<li>Spring Web : 요청 응답과 관련된 Spring MVC Container(톰캣,Controller,Jackson ...)</li>	
+			<li>Thymleaf : 컨트롤러가 요청하는 서버사이드 view로 자바코드를 html로 작성가능</li>
+			<li>Devtools : 코드 수정시 서버 재시작 및 브라우저에 live reload를 설치하면 자동 브라우저 새로고침 기능 제공
+			<li>mysql Java connector : mysql에서 제공하는 접속 라이브러리(Spring datasource 설정을 해야 스프링 실행)</li>
+			<li>Spring JPA : POJO(dto)로 데이터 접속 및 쿼리를 생성하는 라이브러리</li>
+			<li>lombok : 이클립스에 설치되는 확장프로그램으로 자동으로 getter setter 캡슐화를 생성 
+			(lombok.jar 실행후 eclipce.init 파일 선택 후 설치)
+			</li>
+		</ul>
+		<h2>server side view Template Thymleaf</h2>
+		<ul>
+			<li>동적 파일인데 html 문법으로 작성되는 view</li>
+			<li>src/main/resources/templates경로에 작성하면 웹앱으로 배포될때 
+				숨겨진 폴더인 WEB-INF/templates에 작성된다.</li>
+			<li>templates 에 작성된 타임리프 문서는 컨트롤러와 타임리프에서만 호출할 수 있다.</li>
+			<li>컨트롤러와 타임리프가 view를 호출하면 앞에는(Prefix) "WEB-INF/templates/"와 
+			뒤에는(Suffix) ".html" 이 자동으로 붙는다.</li>
+			<li>jsp가 html문법과 Java문법이 혼재되어서 유지보수가 어려워 등장하게 됨</li>
+			<li>WEB-INF/templates 에 작성하면 보안에 유리하다.</li>
+		</ul>
+	</main>	
+	
+</body>
+</html>

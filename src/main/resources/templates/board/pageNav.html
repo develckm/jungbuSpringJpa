@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" th:classappend="${(boardList.isFirst)?'disabled':''}">
+      <a class="page-link" th:href="@{''(page=0)}">First</a>
+    </li>
+    <li class="page-item" th:classappend="${(!boardList.hasPrevious)?'disabled':''}">
+      <a class="page-link" th:href="@{''(page=${boardList.number-1})}">Prev</a>
+    </li>
+    <li class="page-item" th:each="page:${#numbers.sequence(0,boardList.totalPages-1)}">
+    	<a 	class="page-link"
+    		th:classappend="${(boardList.number==page)?'active':''}" 
+    		th:href="@{''(page=${page})}" 
+    		th:text="${page+1}"></a>
+    </li>
+    <li class="page-item" th:classappend="${(!boardList.hasNext)?'disabled':''}">
+      <a class="page-link" th:href="@{''(page=${boardList.number+1})}">Next</a>
+    </li>
+    <li class="page-item" th:classappend="${(boardList.isLast)?'disabled':''}">
+      <a class="page-link" th:href="@{''(page=${boardList.totalPages-1})}">Last</a>
+    </li>
+    
+  </ul>
+</html>

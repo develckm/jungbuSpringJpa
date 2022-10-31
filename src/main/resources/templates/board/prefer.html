@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<a 
+		data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요!"
+	th:href="@{/board/prefer/{no}/{prefer}(no=${board.boardNo},prefer=${true})}" 
+	class="btn btn-outline-primary rounded-pill">
+		<i  class="bi" th:classappend="
+		${(board.boardPrefer!=null&&board.boardPrefer.prefer)?
+			'bi-hand-thumbs-up-fill':
+			'bi-hand-thumbs-up'}"></i>				
+		<span th:text="${board.likes}"></span>
+	</a>
+	<a 
+		data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="싫어요!"
+	th:href="@{/board/prefer/{no}/{prefer}(no=${board.boardNo},prefer=${false})}"  
+	class="btn btn-outline-danger rounded-pill">
+		<i  class="bi" th:classappend="
+		${(board.boardPrefer!=null&&!board.boardPrefer.prefer)?
+			'bi-hand-thumbs-up-fill':
+			'bi-hand-thumbs-up'}"></i>				
+		 <span th:text="${board.bads}"></span>
+	</a>
+</html>
