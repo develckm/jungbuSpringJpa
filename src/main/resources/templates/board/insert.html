@@ -9,7 +9,7 @@
 	<main class="container mt-5">
 		<h1 class="mt-3">Spring_board.board insert form</h1>
 		<form action="/board/insert.do" method="post" enctype="multipart/form-data">
-			<input type="hidden" name="userId" th:value="${session.loginUser.userId}">
+			<input type="hidden" name="user.userId" th:value="${session.loginUser.userId}">
 			<p>
 				<strong>글쓴이 : </strong>
 				<span th:text="${session.loginUser.userId}"></span>

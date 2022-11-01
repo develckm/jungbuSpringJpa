@@ -1,9 +1,14 @@
 package com.joongbu.spring_board_jpa.controler;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,11 +17,17 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.joongbu.spring_board_jpa.dto.BoardDto;
+import com.joongbu.spring_board_jpa.dto.BoardImgDto;
 import com.joongbu.spring_board_jpa.dto.ReplyDto;
+import com.joongbu.spring_board_jpa.dto.UserDto;
+import com.joongbu.spring_board_jpa.repository.BoardImgRepository;
 import com.joongbu.spring_board_jpa.repository.BoardRepository;
 import com.joongbu.spring_board_jpa.repository.ReplyRepository; 
 
@@ -28,6 +39,12 @@ public class BoardController {
 	
 	@Autowired
 	ReplyRepository replyRepository;
+	
+	@Autowired
+	BoardImgRepository boardImgRepository;
+	
+	@Value("${spring.servlet.multipart.location}")
+	String imgSavePath;
 	
 	@GetMapping("/list.do")
 	public String list(
@@ -70,7 +87,64 @@ public class BoardController {
 		}else {
 			return "redirect:/board/list.do";
 		}
-		
+	}
+	@GetMapping("/insert.do")
+	public String insert(
+			@SessionAttribute(required=false) UserDto loginUser,
+			HttpSession session
+			) {
+		if(loginUser!=null) {
+			return "/board/insert";			
+		}else{
+			session.setAttribute("msg", "게시글 등록은 로그인을 하셔야 할 수 있습니다.");
+			return "redirect:/user/login.do";
+		}
+	}
+	@PostMapping("/insert.do")
+	public String insert(
+			BoardDto board,
+			@RequestParam("img") MultipartFile[] imgs,
+			@SessionAttribute UserDto loginUser,
+			HttpSession session
+			) {
+		if(!board.getUser().getUserId().equals(loginUser.getUserId())) {
+			session.setAttribute("msg", "로그인 한 유저와 글쓴이가 동일하지 않습니다.");
+			return "redirect:/user/login.do";
+		}
+		BoardDto saveBoard=null;
+		try {
+			saveBoard=boardRepository.save(board);
+			//만약 값이 존재하면 Update,없으면 Insert				
+			for(MultipartFile img: imgs) {
+				if(!img.isEmpty()) {
+					String []contentTypes=img.getContentType().split("/"); // application/json, image/jpeg
+					if(contentTypes[0].equals("image")) {
+						String fileName="board_"+System.currentTimeMillis()+"_"+((int)(Math.random()*10000))+"."+contentTypes[1];
+						Path path=Paths.get(imgSavePath+"/"+fileName);
+						img.transferTo(path);
+						BoardImgDto boardImg=new BoardImgDto();
+						boardImg.setBoardNo(saveBoard.getBoardNo());
+						boardImg.setImgPath(fileName);
+						boardImgRepository.save(boardImg);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(saveBoard==null) {
+			return "redirect:/board/insert.do";			
+		}else {
+			return "redirect:/board/detail.do?boardNo="+saveBoard.getBoardNo();			
+		}
+	}
+	@GetMapping("/update.do")
+	public String update(
+			@RequestParam("boardNo") int boardNo,
+			@SessionAttribute UserDto loginUser,
+			HttpSession session
+			) {
+		return "/board/update";
 	}
 	
 }

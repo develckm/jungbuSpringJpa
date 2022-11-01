@@ -3,9 +3,12 @@ package com.joongbu.spring_board_jpa.dto;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -35,22 +38,22 @@ SPRING_BOARD.board
 public class BoardDto {
 	//**jpa 예약어로 "_"를 필드 접근자로 사용중이기 때문에 무조건 필드명은 낙타표기법을 해야한다!!!!
 	@Id  //pk에 명시를 해야 동작!
+	@GeneratedValue(strategy = GenerationType.IDENTITY)//GenerationType.IDENTITY :auto increment
 	@Column(name = "board_no")
 	private int boardNo; 
 	private String title;    
 	private String contents; 
-	@Column(name = "post_time")
+	@Column(name = "post_time",insertable = false, updatable = false)
 	private Date postTime;
-	private int views;   
-
+	@Column(insertable = false, updatable = false)
+	private int views;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false) 
+	@JoinColumn(name = "user_id", updatable = false) 
 	private UserDto user; //user 조인되어서 출력되는 테이블이기 때문에 board에서 수정하거나 등록할 수 없다.
 
-//  paging을 할 수 없기 때문에 삭제
-//	@OneToMany(fetch = FetchType.LAZY)
-//	@JoinColumn(name = "board_no", insertable = false, updatable = false)
-//	private List<ReplyDto> replyList;
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name="board_no",insertable = false, updatable = false)
+	private List<BoardImgDto> boardImgList;
 	
 	//@Formula : table의 필드는 아닌데 출력할 내역(바뀐 이름 Or 서브쿼리 결과)
 	@Formula(value = "(SELECT COUNT(*) FROM BOARD_PREFER p WHERE p.prefer=1 AND p.board_no=board_no)") 

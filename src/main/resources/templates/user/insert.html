@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script defer="defer" src="/js/userInsert.js"></script>
+</head>
+<body>
+	<header th:include="/headerNav"></header>
+	<main class="container mx-auto mt-5"  style="max-width: 600px;">
+		<h1>Spring_board.user Insert Form</h1>
+		<form name="userInsertForm" action="/user/insert.do" method="post" class="mt-5" >
+			<div class="mb-3 row">
+				<label class="col-sm-2 col-form-label">아이디</label>
+				<div  class="col-sm-10">
+					<input class="form-control" type="text" name="userId" value="">
+				    <div class="valid-feedback">
+					     사용할 수 있는 아이디입니다.
+					</div>
+				    <div class="invalid-feedback" id="userIdInvalid">
+					     사용 중인 아이디입니다.
+					</div>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-2 col-form-label">패스워드</label>
+				<div  class="col-sm-10">
+					<input class="form-control" type="password" name="pw" value="">
+				</div>
+			</div>
+			<div class="mb-3 input-group">
+				<label class="input-group-text">이름 </label>
+				<input class="form-control" type="text" name="name" value="">
+			</div>
+			<div class="mb-3 input-group">
+				<label class="input-group-text">폰번호 </label>
+				<input class="form-control" type="text" name="phone" value="">
+			</div>
+			<div class="mb-3 input-group">
+				<label class="input-group-text">이메일 </label>
+				<input class="form-control" type="text" name="email" value="">
+			</div>
+			<div class="mb-3 input-group">
+				<label class="input-group-text">생일 </label>
+				<input class="form-control" type="date" name="birth" value="">
+			</div>
+			<div>
+				<button type="reset" class="btn btn-outline-secondary">초기화 </button>
+				<button class="btn btn-outline-primary">등록</button>
+			</div>
+		</form>
+	</main>
+	
+</body>
+</html>
