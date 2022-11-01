@@ -2,6 +2,7 @@ package com.joongbu.spring_board_jpa.controler;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +49,7 @@ public class BoardController {
 	
 	@GetMapping("/list.do")
 	public String list(
-			@RequestParam(defaultValue="1")int page,
+			@RequestParam(defaultValue="0")int page,
 			Model model	) {
 			int ROWS=4;
 			Pageable pageable=PageRequest.of(page, ROWS, Sort.by("boardNo").descending());
@@ -69,7 +70,7 @@ public class BoardController {
 	@GetMapping("/detail.do")
 	public String detil(
 			@RequestParam(required=true) int boardNo,
-			@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int rows,
 			@RequestParam(defaultValue = "replyNo") String order,
 			@RequestParam(defaultValue = "DESC") String direct,
@@ -142,9 +143,51 @@ public class BoardController {
 	public String update(
 			@RequestParam("boardNo") int boardNo,
 			@SessionAttribute UserDto loginUser,
-			HttpSession session
+			HttpSession session,
+			Model model
 			) {
-		return "/board/update";
+		Optional<BoardDto> boardOpt=boardRepository.findById(boardNo);
+		
+		if(boardOpt.isPresent()) {
+			if(boardOpt.get().getUser().getUserId().equals(loginUser.getUserId())) {
+				model.addAttribute("board", boardOpt.get());
+				return "/board/update";							
+			}else {
+				session.setAttribute("msg", "글쓴이만 수정 가능합니다.");
+				return "redirect:/user/login.do";
+			}
+			
+		}else {
+			return "redirect:/baord/list.do";
+		}
 	}
-	
+	@PostMapping("/update.do")
+	public String update(
+			BoardDto board,
+			@RequestParam( name = "boardImgNo",required = false) int[]boardImgNos) {
+		System.out.println(board);
+		System.out.println(Arrays.toString(boardImgNos));
+		BoardDto saveBoard=null;
+		try {
+			saveBoard=boardRepository.save(board);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(saveBoard!=null) {
+			return "redirect:/board/detail.do?boardNo="+saveBoard.getBoardNo();
+		}else {
+			return "redirect:/board/update.do?boardNo="+board.getBoardNo();
+
+		}
+		
+	}
 }
+
+
+
+
+
+
+
+
+
