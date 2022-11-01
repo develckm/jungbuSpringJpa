@@ -29,9 +29,9 @@
 	    	 th:src="@{/img/{file}(file=${reply.imgPath})}">
 	    	<span  class="col-10"  th:text="${reply.contents}"></span>
 	    </div>
-<!--  		<th:block th:include="/reply/rrlist" 
+  		<th:block th:include="/reply/rrlist" 
 				th:with="rrList=${reply.replyList}"></th:block>
- --> 		<div th:if="${session.loginUser!=null}" class="my-2">
+ 		<div th:if="${session.loginUser!=null}" class="my-2">
 			<a class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" 
 				th:href="${'#collapse'+reply.replyNo}">
 			  	대 댓글 작성

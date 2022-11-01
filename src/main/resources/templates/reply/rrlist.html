@@ -9,7 +9,7 @@
 	    </div>
 	    <div class="mb-1 d-flex justify-content-between align-items-center">
 		    <div>
-			    <span class="me-2" th:text="${reply.userId}"></span>
+			    <span class="me-2" th:text="${reply.user.userId}"></span>
 				<button class="rounded-pill btn btn-outline-danger btn-sm">
 					<i class="bi bi-hand-thumbs-up"></i>
 					<th:block th:text="${reply.likes}"></th:block>

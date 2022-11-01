@@ -53,9 +53,9 @@ public class ReplyDto {
 	private int bads;    
 	@Column(name = "fk_reply_no")
 	private Integer fkReplyNo; //FK : self join(reply.reply_no is null)
-	//@OneToMany(fetch = FetchType.LAZY)
-	//@JoinColumn(name = "fk_reply_no",insertable = false,updatable = false)
-	//private List<ReplyDto> replyList; //reply : reply = 1 : N   대 댓글
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name="fk_reply_no",referencedColumnName = "reply_no",insertable = false,updatable = false)
+	private List<ReplyDto> replyList; //reply : reply = 1 : N   대 댓글
 }
 
 
