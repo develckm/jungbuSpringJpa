@@ -30,18 +30,7 @@
 				<strong>조회수 : </strong>
 				<span th:text="${board.views}"></span>
 			</p>
-			<p>
-				<button class="rounded-pill btn btn-outline-danger">
-					<i class="bi bi-hand-thumbs-up"></i>
-					<th:block th:text="${board.likes}"></th:block>
-				</button>
-				
-				<button class="rounded-pill btn btn-outline-primary"> 
-					<i class="bi bi-hand-thumbs-down"></i>
- 					<th:block th:text="${board.bads}"></th:block>
- 				</button>
-				
-			</p>
+			<p th:include="/board/prefer"></p>
  			<div>
 				<img th:each="boardImg:${board.boardImgList}"
 				style="max-width: 100px" alt="" 
